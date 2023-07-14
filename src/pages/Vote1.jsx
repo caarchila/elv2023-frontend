@@ -2,10 +2,18 @@ import { Button } from '@mui/material';
 import { deepOrange, grey, common } from '@mui/material/colors';
 import CenCard from '../components/CenCard';
 import logo from '../logo.jpeg';
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { TokenContext } from '../provides/TokenContext';
+import React, { useContext, useEffect} from 'react';
 
 export default function Vote1() {
     const navigate = useNavigate();
+
+    const token = useContext(TokenContext);
+
+    if (!token) {
+       return navigate("/");
+    }
 
     function handleYesClick() {
         navigate("/vote2");        
