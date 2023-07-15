@@ -1,24 +1,28 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
-import { TokenContext } from "../../provides/TokenContext";
-import Cabecera from "../../components/Cabecera";
-import { PAGES } from "../../Pages";
+import React, {useState, useContext} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Button, TextField} from '@mui/material';
+import {TokenContext} from '../../provides/TokenContext';
+import Cabecera from '../../components/Cabecera';
+import {PAGES} from '../../config/constants';
 
+/**
+ * Login Page
+ * @return {Object} Login form
+ */
 function LoginPageAdmin() {
   const navigate = useNavigate();
-  const { token, updateToken } = useContext(TokenContext);
-  
-  const [authState, setAuthState] = useState({error: false, message: ""})
+  const {updateToken} = useContext(TokenContext);
+
+  const [authState, setAuthState] = useState({error: false, message: ''});
 
   const [formData, setFormData] = useState({
-    table: "",
-    user: "",
-    password: "",
+    table: '',
+    user: '',
+    password: '',
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -30,27 +34,28 @@ function LoginPageAdmin() {
       const options = {
         method: 'POST',
         body: JSON.stringify({
-          "codigo": formData.table,
-          "usuario": formData.user,
-          "clave" : formData.password
+          'codigo': formData.table,
+          'usuario': formData.user,
+          'clave': formData.password,
         }),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-      const response = await fetch(process.env.REACT_APP_API_URL + '/loginAdm', options );
+          'Content-Type': 'application/json',
+        },
+      };
+      const response = await fetch(
+          process.env.REACT_APP_API_URL + '/loginAdm',
+          options );
       const data = await response.json();
       if (data.status === 401) {
-        return setAuthState({error:true, message: data.error})
+        return setAuthState({error: true, message: data.error});
       }
-      if (!data.token) throw Error("No token")
-      updateToken({value: data.token, type: 'admin'})
+      if (!data.token) throw Error('No token');
+      updateToken({value: data.token, type: 'admin'});
       navigate(PAGES.admin.dashboard);
     } catch (error) {
-      updateToken("")
-      console.error("Error:", error);
+      updateToken('');
+      console.error('Error:', error);
     }
-    
   };
 
 
@@ -105,7 +110,7 @@ function LoginPageAdmin() {
             </Button>
           </div>
           <div className="m-3 w-3/4">
-              {authState.error ? authState.message : ""}
+            {authState.error ? authState.message : ''}
           </div>
         </div>
       </div>

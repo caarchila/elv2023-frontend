@@ -1,24 +1,25 @@
-import logo from "../logo.jpeg";
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { TokenContext } from "../provides/TokenContext";
-import { Button, TextField, Select, MenuItem } from "@mui/material";
+import logo from '../logo.jpeg';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Button, TextField, Select, MenuItem} from '@mui/material';
 
-
+/**
+ * LoginPage
+ * @return {Object} asd
+ */
 function LoginPage() {
   const navigate = useNavigate();
-  const { token, updateToken } = useContext(TokenContext);
-  const [loginToken, setLoginToken] = useState("");
+
 
   const [formData, setFormData] = useState({
-    table: "",
-    user: "",
-    password: "",
-    pc: "",
+    table: '',
+    user: '',
+    password: '',
+    pc: '',
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     console.log(name, value);
     setFormData((prevData) => ({
       ...prevData,
@@ -26,25 +27,15 @@ function LoginPage() {
     }));
   };
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(process.env.REACT_APP_API_URL);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    updateToken(loginToken);
+  const handleLoginClick = () => {
+    navigate('/document');
   };
-
-  function handleLoginClick() {
-    navigate("/document");
-  }
 
   return (
     <div className="w-full h-full mt-8 flex flex-col items-center">
       <div className="flex flex-col items-center bg-white w-[80%] md:w-[50%]">
-        <div className="h-28 bg-[#0058B1] w-[100%] flex row items-center justify-between">
+        <div className="h-28 bg-[#0058B1] w-[100%] flex
+          row items-center justify-between">
           <div className="font-bold text-4xl ml-4 text-white border-solid">
             Elecciones Internas 2023
           </div>
