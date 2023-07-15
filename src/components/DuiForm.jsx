@@ -9,8 +9,7 @@ const regexDui = /^\d{8}-\d{1}$/;
  * @param {Object} onSubmit
  * @return {*}
  */
-export default function DuiForm({onSubmit}) {
-  const [dui, setDui] = useState('');
+export default function DuiForm({onSubmit, dui, setDui}) {
   const [statusError, setStatusError] = useState('');
 
   useEffect(() => {

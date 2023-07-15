@@ -15,6 +15,41 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
   const {token} = useContext(TokenContext);
   const [votanteInfo, setVontanteInfo] = useState({});
+  const [dui, setDui] = useState('');
+  const [computer, setComputer] = useState('');
+
+
+  const handlerVote = async () => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        padId: votanteInfo.padId,
+        mesId,
+        comId: computer,
+      }),
+    };
+    const response = await fetch(
+        process.env.REACT_APP_API_URL + '/mesa/asignarTerminal',
+        options,
+    );
+    try {
+      const data = await response.json();
+      console.log(data);
+      setVontanteInfo({});
+      setDui('');
+    } catch (e) {
+      setVontanteInfo({habilitado: false,
+        mensajeError: 'No se puede conectar con el servidor'});
+    }
+  };
+
+  const handleChangeComputer = (event) => {
+    setComputer(event.target.value);
+  };
 
   const handlerFindDui = async (dui) => {
     if (dui == '') { // TODO: Solución muy cutre
@@ -29,6 +64,7 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
       },
       body: JSON.stringify({
         'documento': dui,
+        mesId,
       }),
     };
     const response = await fetch(
@@ -37,18 +73,33 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
     );
     try {
       const data = await response.json();
-      console.log(data);
-      setVontanteInfo(data);
+      if (data.votacionesList?.length > 0) {
+        setVontanteInfo({...data, mensajeError: 'Esta persona ya voto'});
+      } else {
+        setVontanteInfo(data);
+      }
     } catch (e) {
       setVontanteInfo({habilitado: false,
         mensajeError: 'No se puede conectar con el servidor'});
     }
   };
 
+  const getHourVote = (voteList) => {
+    console.log({voteList, hour: true});
+    if (!voteList || voteList.length == 0) return '';
+    const vote = voteList[0];
+    const date = new Date(vote.fechaHora);
+    return 'Voto a las ' + date.toLocaleTimeString('es-sv', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
   const panel = () => {
     return (
       <>
-        <DuiForm onSubmit={handlerFindDui} />
+        <DuiForm onSubmit={handlerFindDui} dui={dui} setDui={setDui}/>
         {
           votanteInfo.habilitado == false ?
             (<Alert severity='error'>
@@ -78,7 +129,7 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
                 InputProps={{
                   readOnly: true,
                 }}
-                value={votanteInfo.municipio || ''}
+                value={votanteInfo.municipio?.nombreDepartamento || ''}
               />
               <TextField
                 label="Municipio"
@@ -86,11 +137,13 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
                 InputProps={{
                   readOnly: true,
                 }}
+                value={votanteInfo.municipio?.nombre || ''}
               />
             </div>
             <div className="flex gap-3 w-full justify-around py-8">
-              <p className="text-4xl">Votacion: 3/3</p>
-              <p className="text-4xl">11:57 a.m.</p>
+              <p className="text-4xl">{
+                getHourVote(votanteInfo.votacionesList)}
+              </p>
             </div>
             <div className="flex gap-3 w-full">
               <FormControl className="w-[70%]">
@@ -101,7 +154,8 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Computadora"
-                  defaultValue=""
+                  value={computer}
+                  onChange={handleChangeComputer}
                 >
                   {
                     computers.filter((c) => {
@@ -117,7 +171,9 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
                   }
                 </Select>
               </FormControl>
-              <Button variant="contained" disabled={!votanteInfo.habilitado}>
+              <Button variant="contained"
+                disabled={!votanteInfo.habilitado || !computer}
+                onClick={handlerVote}>
                 Habilitar Voto
               </Button>
             </div>
