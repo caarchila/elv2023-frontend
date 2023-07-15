@@ -1,7 +1,8 @@
-import logo from '../logo.jpeg';
+
 import {Button, TextField} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import React, {useState} from 'react';
+import Cabecera from '../../components/Cabecera';
 
 /**
  * qwe
@@ -27,12 +28,7 @@ function DocumentInputPage() {
   return (
     <div className="w-full h-full mt-8 flex flex-col items-center">
       <div className='flex flex-col items-center bg-white w-[80%] md:w-[50%]'>
-        <div className="h-28 bg-[#0058B1] w-[100%]
-        flex row items-center justify-between">
-          <div className='font-bold text-4xl ml-4
-          text-white border-solid'>Elecciones Internas 2023</div>
-          <div><img src={logo} className='w-28' /></div>
-        </div>
+        <Cabecera title=""/>
         <div className='flex flex-col justify-evenly items-center p-6 w-full'>
           <div className='m-3 w-1/2'>
             <TextField label="Ingrese su número de DUI"

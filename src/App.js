@@ -10,6 +10,7 @@ import {TokenProvider} from './provides/TokenContext';
 import IndexPage from './pages/IndexPage';
 import RequireLogin from './pages/auth/RequireLogin';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
+import DocumentInputPage from './pages/votante/DocumentInputPage';
 import {PAGES} from './config/constants';
 import LoginPageVontante from './pages/votante/LoginPageVotante';
 
@@ -28,6 +29,11 @@ function App() {
           <Route path={PAGES.admin.dashboard} element={
             <RequireLogin>
               <DashboardAdmin/>
+            </RequireLogin>
+          }/>
+          <Route path={PAGES.votante.votePage} element={
+            <RequireLogin>
+              <DocumentInputPage/>
             </RequireLogin>
           }/>
           <Route path="/vote1" element={<Vote1/>}/>
