@@ -3,6 +3,7 @@ import React, {useContext} from 'react';
 import {useNavigate, Navigate} from 'react-router-dom';
 import {TokenContext} from '../provides/TokenContext';
 import {Button} from '@mui/material';
+import {PAGES} from '../config/constants';
 
 /**
  * Index page
@@ -15,9 +16,9 @@ function IndexPage() {
   if (token.value) {
     switch (token.type) {
       case 'admin':
-        return <Navigate to="/table" />;
+        return <Navigate to={PAGES.admin.loginAdmin} />;
       case 'votante':
-        return <Navigate to="/votante" />;
+        return <Navigate to={PAGES.votante.login} />;
       default:
         return <Navigate to="/error" />;
     }
@@ -40,7 +41,7 @@ function IndexPage() {
           <Button
             variant="contained"
             onClick={() => {
-              navigate('table');
+              navigate(PAGES.admin.loginAdmin);
             }}
           >
             Módulo de Administración
@@ -49,7 +50,7 @@ function IndexPage() {
           <Button
             variant="contained"
             onClick={() => {
-              navigate('kiosko');
+              navigate(PAGES.votante.login);
             }}
           >
             Módulo de recepción de votos

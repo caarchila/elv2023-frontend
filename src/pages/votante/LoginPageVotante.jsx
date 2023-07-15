@@ -1,54 +1,74 @@
-import logo from '../logo.jpeg';
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Button, TextField, Select, MenuItem} from '@mui/material';
+import {Button, TextField} from '@mui/material';
+import {TokenContext} from '../../provides/TokenContext';
+import Cabecera from '../../components/Cabecera';
+import {PAGES} from '../../config/constants';
 
 /**
- * LoginPage
- * @return {Object} asd
+ * Login Page
+ * @return {Object} Login form
  */
-function LoginPage() {
+function LoginPageVontante() {
   const navigate = useNavigate();
+  const {updateToken} = useContext(TokenContext);
 
+  const [authState, setAuthState] = useState({error: false, message: ''});
 
   const [formData, setFormData] = useState({
     table: '',
     user: '',
     password: '',
-    pc: '',
   });
 
   const handleChange = (e) => {
     const {name, value} = e.target;
-    console.log(name, value);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const handleLoginClick = () => {
-    navigate('/document');
+  const handleLoginClick = async () => {
+    try {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({
+          'codigo': formData.table,
+          'usuario': formData.user,
+          'clave': formData.password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const response = await fetch(
+          process.env.REACT_APP_API_URL + '/loginAdm',
+          options );
+      const data = await response.json();
+      if (data.status === 401) {
+        return setAuthState({error: true, message: data.error});
+      }
+      if (!data.token) throw Error('No token');
+      updateToken({value: data.token, type: 'admin'});
+      navigate(PAGES.admin.dashboard);
+    } catch (error) {
+      updateToken('');
+      console.error('Error:', error);
+    }
   };
+
 
   return (
     <div className="w-full h-full mt-8 flex flex-col items-center">
       <div className="flex flex-col items-center bg-white w-[80%] md:w-[50%]">
-        <div className="h-28 bg-[#0058B1] w-[100%] flex
-          row items-center justify-between">
-          <div className="font-bold text-4xl ml-4 text-white border-solid">
-            Elecciones Internas 2023
-          </div>
-          <div>
-            <img src={logo} className="w-28" alt="logo" />
-          </div>
-        </div>
+        <Cabecera title="Elecciones Internas 2023 - Votante"/>
         <div className="flex flex-col justify-evenly items-center p-6 w-full">
           <div className="m-3 w-3/4">
             <TextField
               label="Mesa #"
               className="w-full"
-              name="mesa"
+              name="table"
               value={formData.table}
               onChange={(e) => {
                 handleChange(e);
@@ -58,6 +78,7 @@ function LoginPage() {
           <div className="m-3 w-3/4">
             <TextField
               label="Usuario"
+              name="user"
               className="w-full"
               value={formData.user}
               onChange={(e) => {
@@ -68,6 +89,7 @@ function LoginPage() {
           <div className="m-3 w-3/4">
             <TextField
               type="password"
+              name="password"
               label="Contraseña"
               className="w-full"
               value={formData.password}
@@ -75,13 +97,6 @@ function LoginPage() {
                 handleChange(e);
               }}
             />
-          </div>
-          <div className="m-3 w-3/4">
-            <Select label="Computadora" className="w-full">
-              <MenuItem value="{1}">PC-01</MenuItem>
-              <MenuItem value="{2}">PC-02</MenuItem>
-              <MenuItem value="{3}">PC-03</MenuItem>
-            </Select>
           </div>
           <div className="m-3">
             <Button
@@ -94,10 +109,13 @@ function LoginPage() {
               INGRESAR
             </Button>
           </div>
+          <div className="m-3 w-3/4">
+            {authState.error ? authState.message : ''}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default LoginPage;
+export default LoginPageVontante;

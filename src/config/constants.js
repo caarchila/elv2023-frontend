@@ -16,7 +16,7 @@ const PAGES = {
     dashboard: '/table/dashboard',
   },
   votante: {
-
+    login: '/vontante',
   },
 
 };

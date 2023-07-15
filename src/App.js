@@ -11,6 +11,7 @@ import IndexPage from './pages/IndexPage';
 import RequireLogin from './pages/auth/RequireLogin';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import {PAGES} from './config/constants';
+import LoginPageVontante from './pages/votante/LoginPageVotante';
 
 /**
  * Home page
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route exact path={PAGES.index} element={<IndexPage/>} />
           <Route path={PAGES.admin.loginAdmin} element={<LoginPageAdmin/>} />
+          <Route path={PAGES.votante.login} element={<LoginPageVontante/>} />
           <Route path={PAGES.admin.dashboard} element={
             <RequireLogin>
               <DashboardAdmin/>
