@@ -14,8 +14,11 @@ export default function Final({handleClickSalir}) {
   return (
     <div className="w-full h-full flex flex-col items-center bg-white">
       <div className='flex flex-col w-full items-center'>
-        <div className='m-4 text-6xl
+        <div className='m-4 text-2xl
         font-bold text-gray-600'>¡¡ Gracias por tu Voto !!</div>
+        <div className='m-4 text-2xl
+        font-bold text-gray-600'>Recuerda que debes presionar el
+         botón para guardar tu votación</div>
         <div className='flex flex-row
         justify-items-end'><img src={check} className='w-40'/></div>
       </div>
@@ -28,7 +31,7 @@ export default function Final({handleClickSalir}) {
             }} className='w-36 h-16'
             sx={{fontSize: '1.5rem',
               fontWeight: 'bold'}}>
-          SALIR
+          Enviar
             </Button>
           </div>
         </div>

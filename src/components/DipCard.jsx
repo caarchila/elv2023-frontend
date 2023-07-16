@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import dummyProfile from '../dummy-profile.jpg';
 import {VOTE_ANSWER} from '../config/constants';
 
 /**
@@ -10,7 +9,7 @@ export default function DipCard({diputado, onClickVote, votable}) {
   const [marcado, setMarcado] = useState(false);
   return (
     <div className={
-      ('flex flex-col border-solid border-gray-300 border m-1 w-[18%]'+
+      ('flex flex-col border-solid border-gray-300 border m-1 w-[25%]'+
       (marcado ? ' bg-green-300': 'bg-stone-300'))}
     onClick={
       () => {
@@ -26,7 +25,7 @@ export default function DipCard({diputado, onClickVote, votable}) {
       <div className="flex flex-row
       items-center">
         <div className="p-1">
-          <img src={dummyProfile} className="w-10 rounded"/></div>
+          <img src={diputado.foto || ''} className="w-10 rounded"/></div>
         <div className="p-1 text-sm">{diputado.nombreCandidato}</div>
       </div>
       <div className="p-1">

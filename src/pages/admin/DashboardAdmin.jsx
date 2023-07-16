@@ -4,7 +4,7 @@ import React, {useState, useContext, useEffect} from 'react';
 import {TokenContext} from '../../provides/TokenContext';
 import {Button, Dialog, DialogTitle,
   DialogContent, DialogActions, DialogContentText} from '@mui/material';
-
+import RefreshIcon from '@mui/icons-material/Refresh';
 import AllowVoteControlPanel from '../../components/AllowVoteControlPaneL';
 import {TABLE_STATE} from '../../config/constants';
 
@@ -17,7 +17,7 @@ function DashboardAdmin() {
 
   const [tableState, setTabletState] = useState({});
   const [open, setOpen] = useState(false);
-  const [stasts, setStats] = useState(0);
+  const [stasts, setStats] = useState({});
 
   const handleClickOpenConfirmation = () => {
     setOpen(true);
@@ -46,6 +46,29 @@ function DashboardAdmin() {
     setTabletState(data);
   };
 
+  /**
+   * @param {*} mesId
+   */
+  function fetchStats(mesId) {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        mesId,
+      }),
+    };
+    console.log(options);
+    fetch(
+        process.env.REACT_APP_API_URL + '/mesa/panelMesa',
+        options)
+        .then((res) => res.json())
+        .then((data)=> {
+          setStats(data);
+        }).catch();
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,28 +85,12 @@ function DashboardAdmin() {
       const data = await response.json();
       setTabletState(data);
     };
-    const interval = setInterval( () => {
-      const options = {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token.value}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mesId: tableState.mesId,
-        }),
-      };
-      fetch(
-          process.env.REACT_APP_API_URL + '/mesa/panelMesa',
-          options)
-          .then((res) => res.json())
-          .then((data)=> {
-            setStats(data);
-          }).catch();
-    }, 1800);
     fetchData();
-    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    fetchStats(tableState.mesId);
+  }, [tableState]);
 
   const handleOpenTable = async () => {
     const options = {
@@ -112,9 +119,17 @@ function DashboardAdmin() {
         <div className='flex-1 p-4 bg-white'>
           <AllowVoteControlPanel tableStatus={tableState.estado}
             mesId={tableState.mesId}
-            computers={tableState.computadorasList} />
+            computers={tableState.computadorasList}
+            refresh={ () => {
+              fetchStats(tableState.mesId);
+            }} />
         </div>
         <div className='flex-1 items-center flex-col justify-center gap-7'>
+          <Button className='float-right m-5 p-5' onClick={() =>{
+            fetchStats(tableState.mesId);
+          }}>
+            <RefreshIcon />
+          </Button>
           <div className='w-full flex-1 grow p-10 mb-6'>
             <div className='flex flex-col p-10 gap-10'>
               <div className="text-blue-600 text-3xl">
@@ -123,18 +138,18 @@ function DashboardAdmin() {
               <div className="text-blue-600 text-3xl">
                    Asistentes:
                 {` ${stasts.asistentes}   
-                (${stasts.prcAsisentes.toFixed(2)}%)`}
+                (${stasts.prcAsisentes?.toFixed(2)}%)`}
               </div>
               <div className="text-blue-600 text-3xl">
                   Pendientes:
                 {` ${stasts.pendientes}
-                 (${stasts.prcPendientes.toFixed(2)}%)`}
+                 (${stasts.prcPendientes?.toFixed(2)}%)`}
               </div>
               <hr className='border-1 border-black'/>
               <div className="text-blue-600 text-3xl">
                   Votos válidos:
                 {` ${stasts.votosValidos}  
-                (${stasts.prcVotosValidos.toFixed(2)}%)`}
+                (${stasts.prcVotosValidos?.toFixed(2)}%)`}
               </div>
             </div>
           </div>

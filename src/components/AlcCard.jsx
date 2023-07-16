@@ -1,6 +1,4 @@
 import React from 'react';
-import dummyProfile from '../dummy-profile.jpg';
-
 
 /**
  * Dip card
@@ -12,7 +10,7 @@ export default function DipCard({candidato= {}}) {
     border-gray-300 border m-1 w-[50%]">
       <div className="flex flex-row items-center justify-evenly p-8">
         <div className="p-1">
-          <img src={dummyProfile} className="w-40 rounded-full"/>
+          <img src={candidato.foto || ''} className="w-40 rounded-full"/>
         </div>
         <div className="flex flex-col justify-center">
           <div className="p-1 text-4xl font-bold">

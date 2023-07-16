@@ -1,5 +1,5 @@
 
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 // import {useNavigate} from 'react-router-dom';
 import Cabecera from '../../components/Cabecera';
 import {TokenContext} from '../../provides/TokenContext';
@@ -32,6 +32,23 @@ function VotePage() {
   const [error, setError] = useState('');
   const [vote, setVote] = useState();
   const [vontante, setVontanteInfo] = useState();
+  const [title, setTitle]= useState('');
+
+  useEffect(()=>{
+    switch (phase) {
+      case PHASE.ALCALDE:
+        setTitle('Elección de candidato a alcalde');
+        break;
+      case PHASE.CENTRO:
+        setTitle('Elección de Consejo Ejecutivo Nacional VAMOS');
+        break;
+      case PHASE.DIPUTADO:
+        setTitle('Elección de candidatos a diputados');
+        break;
+      default:
+        setTitle('');
+    }
+  }, [phase]);
 
   const handleDuiValidate = async () => {
     try {
@@ -129,9 +146,9 @@ function VotePage() {
 
   const renderPhase = (value) => {
     switch (value) {
-      case PHASE.VALIDATE_DUI:
+      case PHASE.VALIDATE_DUI: {
         return <DocumentInputPage numDui={dui} setNumDui={setDui}
-          onClickValidate={() => handleDuiValidate()} error={error}/>;
+          onClickValidate={() => handleDuiValidate()} error={error}/>;}
       case PHASE.ALCALDE:
         return <Alcaldes
           munId={vontante.padronElectoral?.municipio?.munId || ''}
@@ -158,7 +175,7 @@ function VotePage() {
 
   return (
     <>
-      <Cabecera title={'Mesa: # ' + token.comId }/>
+      <Cabecera title={'Mesa: # ' + token.comId + ' - ' + title}/>
       {
         renderPhase(phase)
       }

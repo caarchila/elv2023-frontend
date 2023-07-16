@@ -64,7 +64,8 @@ export default function ConsejoNacional({handleVote}) {
       o presione “Abstención” si no desea emitir ninguna posición
       sobre el candidato
       </div>
-      <div className='flex w-full items-center flex-wrap justify-center'>
+      <div className='flex flex-auto
+      w-full items-center flex-wrap justify-center'>
         {
           candidatos.map((c) => {
             return <CenCard key={c.canId}candidato={c}/>;

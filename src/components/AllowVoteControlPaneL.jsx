@@ -12,7 +12,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
  * @param {Object} tableStatus
  * @return {Object} panel if all ok
  * */
-export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
+export default function AllowVoteControlPanel({tableStatus, mesId,
+  computers, refresh}) {
   const {token} = useContext(TokenContext);
   const [votanteInfo, setVontanteInfo] = useState({});
   const [dui, setDui] = useState('');
@@ -20,6 +21,7 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
 
 
   const handlerVote = async () => {
+    refresh();
     const options = {
       method: 'POST',
       headers: {
@@ -56,6 +58,7 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
       setVontanteInfo({});
       return;
     }
+    refresh();
     const options = {
       method: 'POST',
       headers: {

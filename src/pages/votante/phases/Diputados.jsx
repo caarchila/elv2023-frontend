@@ -72,12 +72,20 @@ export default function Diputados({munId, comId, documento, handleVote}) {
 
   return (
     <div className="w-full h-full flex flex-col items-center bg-white">
+      <div className="w-full text-right text-lg p-4">
+        {
+          `Has marcado ${marcas.length ||
+          0} / ${diputados.marcasDepartamento ||
+           '' }`
+        }
+      </div>
       <div className='my-2 mx-20 text-center text-sm'>
       Marque de 1 a {diputados.marcasDepartamento + ' ' || 0 }
        casillas de acuerdo a sus preferencias por los candidatos
       </div>
-      <div className='flex w-full
-        items-center justify-center flex-wrap'>
+
+      <div className='flex flex-auto
+      w-full items-center flex-wrap justify-center'>
         { diputados.candidatos?.map( (d) => {
           return (<DipCard diputado={d}
             key={d.canId}

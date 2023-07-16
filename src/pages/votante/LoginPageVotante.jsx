@@ -4,7 +4,7 @@ import {Button, TextField, FormControl,
 import {useNavigate} from 'react-router-dom';
 import Cabecera from '../../components/Cabecera';
 import {TokenContext} from '../../provides/TokenContext';
-import {COMPUTER_STATE, PAGES} from '../../config/constants';
+import {PAGES} from '../../config/constants';
 
 
 /**
@@ -175,9 +175,7 @@ function LoginPageVontante() {
                   onChange={handleChangeComputer}
                 >
                   {
-                    computers?.filter((c) => {
-                      return c.estado == COMPUTER_STATE.ACT;
-                    } ).map( (c) => {
+                    computers?.map( (c) => {
                       return (
                         <MenuItem
                           key={c.comId}
