@@ -47,7 +47,11 @@ export default function Diputados({munId, comId, documento, handleVote}) {
       }});
   };
   const handleAbsClick= () => {
-    // TODO: ABSTINENCIA
+    handleVote({
+      'diputados': {
+        'dptId': diputados.dptId,
+        'marcas': [],
+      }});
   };
 
   const handleMarcas = (value) =>{

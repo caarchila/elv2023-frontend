@@ -1,8 +1,5 @@
 import './App.css';
-import ConsejoNacional from './pages/votante/phases/ConsejoNacional';
-import Diputados from './pages/votante/phases/Diputados';
-import Vote3 from './pages/Vote3';
-import Final from './pages/Final';
+import Final from './pages/votante/phases/Final';
 import React from 'react';
 import LoginPageAdmin from './pages/admin/LoginPageAdmin';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -36,9 +33,6 @@ function App() {
               <VotePage/>
             </RequireLogin>
           }/>
-          <Route path="/vote1" element={<ConsejoNacional/>}/>
-          <Route path="/vote2" element={<Diputados/>}/>
-          <Route path="/vote3" element={<Vote3/>}/>
           <Route path="/final" element={<Final/>}/>
         </Routes>
       </Router>

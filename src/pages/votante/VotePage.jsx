@@ -7,12 +7,15 @@ import DocumentInputPage from './phases/DocumentInputPage';
 import {Alert} from '@mui/material';
 import ConsejoNacional from './phases/ConsejoNacional';
 import Diputados from './phases/Diputados';
+import Alcaldes from './phases/Alcaldes';
+import Final from './phases/Final';
 
 const PHASE = {
   VALIDATE_DUI: 'VALIDATE',
   ALCALDE: 'ALCALDE',
   CENTRO: 'CENTRO',
   DIPUTADO: 'DIPUTADO',
+  FINAL: 'FINAL',
 };
 
 
@@ -25,13 +28,12 @@ function VotePage() {
   const {token} = useContext(TokenContext);
   const [phase, setPhase] = useState(PHASE.VALIDATE_DUI);
   const [requiredPhases, setRequiredPhases] = useState([]);
-  const [dui, setDui] = useState('03419292-8');
+  const [dui, setDui] = useState('');
   const [error, setError] = useState('');
   const [vote, setVote] = useState();
   const [vontante, setVontanteInfo] = useState();
 
   const handleDuiValidate = async () => {
-    console.log('validate duo');
     try {
       setError('');
       setRequiredPhases([]);
@@ -52,33 +54,29 @@ function VotePage() {
       );
       const data = await response.json();
       setVontanteInfo(data);
-      console.log(data);
       if (!data.valido) {
         return setError(data.mensajeError);
       }
       const avialbe = [];
 
       if (data.habilitaCen) {
-        console.log('Habilitando phase centro');
         avialbe.push(PHASE.CENTRO);
       }
 
       if (data.habilitaDip) {
-        console.log('Habilitando phase diputado');
         avialbe.push(PHASE.DIPUTADO);
       }
 
       if (data.habilitaAlc) {
-        console.log('Habilitando phase alcalde');
         avialbe.push(PHASE.ALCALDE);
       }
+      avialbe.push(PHASE.FINAL);
       setVote({
         'comId': token.comId,
         'padId': data.padronElectoral.padId,
       });
       nextPhase(avialbe);
     } catch (e) {
-      console.log(e);
       if (!data.valido) {
         setError(data.mensajeError);
       } else {
@@ -88,14 +86,12 @@ function VotePage() {
   };
 
   const nextPhase = (list) => {
-    console.log('Determinando siguiente fase');
     if (!list || list.length == 0) {
       setPhase(PHASE.VALIDATE_DUI);
       return;
     }
     const listClone = list.slice(0);
     const newPhase = listClone.shift();
-    console.log(newPhase);
     setPhase(newPhase);
     setRequiredPhases(listClone);
   };
@@ -109,13 +105,38 @@ function VotePage() {
     }
   };
 
+  const enviarVoto = async () => {
+    console.log(vote);
+    const options = {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(vote),
+    };
+    const response = await fetch(
+        process.env.REACT_APP_API_URL + '/terminal/registrarVoto',
+        options,
+    );
+    console.log(response);
+
+    setPhase(PHASE.VALIDATE_DUI);
+    setVote({});
+    setVontanteInfo({});
+  };
+
   const renderPhase = (value) => {
     switch (value) {
       case PHASE.VALIDATE_DUI:
         return <DocumentInputPage numDui={dui} setNumDui={setDui}
           onClickValidate={() => handleDuiValidate()} error={error}/>;
       case PHASE.ALCALDE:
-        return <p>Alcade</p>;
+        return <Alcaldes
+          munId={vontante.padronElectoral?.municipio?.munId || ''}
+          comId={token.comId}
+          documento={dui}
+          handleVote={handleVote}/>;
       case PHASE.CENTRO:
         return <ConsejoNacional handleVote={handleVote}/>;
       case PHASE.DIPUTADO:
@@ -125,6 +146,8 @@ function VotePage() {
           documento={dui}
           handleVote={handleVote}
         />;
+      case PHASE.FINAL:
+        return <Final handleClickSalir={enviarVoto}/>;
       default:
         return <Alert className='error' a={requiredPhases}>
           Contante con el administrador, fase desconocida

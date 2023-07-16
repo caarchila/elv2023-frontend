@@ -1,28 +1,18 @@
 import {Button} from '@mui/material';
-import logo from '../logo.jpeg';
-import check from '../check.jpg';
-import {useNavigate} from 'react-router-dom';
+import check from '../../../check.jpg';
 import React from 'react';
 
 /**
  * Final
  * @return {Object}
  */
-export default function Final() {
-  const navigate = useNavigate();
-
+export default function Final({handleClickSalir}) {
   const handleClick = () => {
-    navigate('/document');
+    handleClickSalir();
   };
 
   return (
     <div className="w-full h-full flex flex-col items-center bg-white">
-      <div className="h-14 bg-[#0058B1] flex row w-full
-       items-center justify-between">
-        <div className='font-bold text-2xl ml-4
-        text-white border-solid'>&nbsp;</div>
-        <div><img src={logo} className='w-14' /></div>
-      </div>
       <div className='flex flex-col w-full items-center'>
         <div className='m-4 text-6xl
         font-bold text-gray-600'>¡¡ Gracias por tu Voto !!</div>

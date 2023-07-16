@@ -1,47 +1,79 @@
 import {Button} from '@mui/material';
 import {deepOrange, grey} from '@mui/material/colors';
-import AlcCard from '../components/AlcCard';
-import logo from '../logo.jpeg';
-import {useNavigate} from 'react-router-dom';
-import React from 'react';
+import AlcCard from '../../../components/AlcCard';
+
+import React, {useContext, useEffect, useState} from 'react';
+import {TokenContext} from '../../../provides/TokenContext';
+import {VOTE_ANSWER} from '../../../config/constants';
 
 /**
  * Vote3
  * @return {Object} vote 3
  */
-export default function Vote3() {
-  const navigate = useNavigate();
+export default function Alcaldes({munId, comId, documento, handleVote}) {
+  const {token} = useContext(TokenContext);
+  const [alcaldes, setAlcaldes] = useState({});
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      const options = {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token.value}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          munId,
+          comId,
+          documento,
+        }),
+      };
+      const response = await fetch(
+          process.env.REACT_APP_API_URL + '/terminal/datosAlcalde',
+          options,
+      );
+      const data = await response.json();
+      setAlcaldes(data);
+    };
+    fetchData();
+  }, []);
 
   const handleYesClick = () => {
-    navigate('/final');
+    handleVote( {'alcalde': {
+      'munId': 27,
+      'canId': 31,
+      'voto': VOTE_ANSWER.SI,
+    }});
   };
   const handleNoClick = () =>{
-    navigate('/final');
+    handleVote( {'alcalde': {
+      'munId': 27,
+      'canId': 31,
+      'voto': VOTE_ANSWER.NO,
+    }});
   };
   const handleAbsClick= () => {
-    navigate('/final');
+    handleVote( {'alcalde': {
+      'munId': 27,
+      'canId': 31,
+      'voto': VOTE_ANSWER.ABSTENERCE,
+    }});
   };
 
   return (
     <div className="w-full h-full flex flex-col items-center bg-white">
-      <div className="h-14 bg-[#0058B1] flex
-      row w-full items-center justify-between">
-        <div className='font-bold text-2xl ml-4
-        text-white border-solid'>
-        3. Elección de candidato a ALCALDE
-         por el municipio de San Salvador Centro
-        </div>
-        <div><img src={logo} className='w-14' /></div>
-      </div>
       <div className='my-2 mx-20 text-center text-sm'>
-      Si apoya al candidato para la alcaldía de San Salvador Centro,
+      Si apoya al candidato para la alcaldía de
+        {' ' + alcaldes.nombreMunicipio || ' ' + ' '},
        presione el botón “SI”.  Si no lo apoya presione el botón “No”
         o presione “Abstención” si no desea emitir
         ninguna posición sobre el candidato
       </div>
       <div className='flex flex-col w-full items-center'>
-        <div className='m-4 text-4xl font-bold'>San Salvador Centro</div>
-        <AlcCard/>
+        <div className='m-4 text-4xl font-bold'>
+          {alcaldes.nombreMunicipio || ' '}
+        </div>
+        { alcaldes ? <AlcCard candidato={alcaldes.candidato}/> : ''}
       </div>
       <div className='w-full flex flex-col items-center'>
         <div className='flex flex-row justify-center m-4 border-t
