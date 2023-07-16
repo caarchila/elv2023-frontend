@@ -124,6 +124,7 @@ function VotePage() {
     setPhase(PHASE.VALIDATE_DUI);
     setVote({});
     setVontanteInfo({});
+    setDui('');
   };
 
   const renderPhase = (value) => {

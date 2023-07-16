@@ -40,11 +40,13 @@ export default function Diputados({munId, comId, documento, handleVote}) {
   }, []);
 
   const handleYesClick= () =>{
-    handleVote({
-      'diputados': {
-        'dptId': diputados.dptId,
-        'marcas': marcas,
-      }});
+    if (marcas.length > 0) {
+      handleVote({
+        'diputados': {
+          'dptId': diputados.dptId,
+          'marcas': marcas,
+        }});
+    }
   };
   const handleAbsClick= () => {
     handleVote({

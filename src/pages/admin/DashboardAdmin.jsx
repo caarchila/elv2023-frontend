@@ -17,6 +17,7 @@ function DashboardAdmin() {
 
   const [tableState, setTabletState] = useState({});
   const [open, setOpen] = useState(false);
+  const [stasts, setStats] = useState(0);
 
   const handleClickOpenConfirmation = () => {
     setOpen(true);
@@ -45,6 +46,7 @@ function DashboardAdmin() {
     setTabletState(data);
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       const options = {
@@ -60,7 +62,27 @@ function DashboardAdmin() {
       const data = await response.json();
       setTabletState(data);
     };
+    const interval = setInterval( () => {
+      const options = {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token.value}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mesId: tableState.mesId,
+        }),
+      };
+      fetch(
+          process.env.REACT_APP_API_URL + '/mesa/panelMesa',
+          options)
+          .then((res) => res.json())
+          .then((data)=> {
+            setStats(data);
+          }).catch();
+    }, 1800);
     fetchData();
+    return () => clearInterval(interval);
   }, []);
 
   const handleOpenTable = async () => {
@@ -84,29 +106,57 @@ function DashboardAdmin() {
 
   return (
     <div className='h-screen flex-col'>
-      <Cabecera title={'Centro de votación: ' + tableState.nombreCto || ''} />
+      <Cabecera title={' Centro de votación: ' +
+      tableState.nombreCto || '' } />
       <div className='flex flex-1 h-full'>
         <div className='flex-1 p-4 bg-white'>
           <AllowVoteControlPanel tableStatus={tableState.estado}
             mesId={tableState.mesId}
             computers={tableState.computadorasList} />
         </div>
-        <div className='flex-1 items-center flex justify-center gap-7'>
-          <Button
-            variant='contained' color='success'
-            disabled={TABLE_STATE.WAIT != tableState.estado}
-            onClick={ () => handleOpenTable()}>
+        <div className='flex-1 items-center flex-col justify-center gap-7'>
+          <div className='w-full flex-1 grow p-10 mb-6'>
+            <div className='flex flex-col p-10 gap-10'>
+              <div className="text-blue-600 text-3xl">
+                  Padrón: {stasts.padron || ''}
+              </div>
+              <div className="text-blue-600 text-3xl">
+                   Asistentes:
+                {` ${stasts.asistentes}   
+                (${stasts.prcAsisentes.toFixed(2)}%)`}
+              </div>
+              <div className="text-blue-600 text-3xl">
+                  Pendientes:
+                {` ${stasts.pendientes}
+                 (${stasts.prcPendientes.toFixed(2)}%)`}
+              </div>
+              <hr className='border-1 border-black'/>
+              <div className="text-blue-600 text-3xl">
+                  Votos válidos:
+                {` ${stasts.votosValidos}  
+                (${stasts.prcVotosValidos.toFixed(2)}%)`}
+              </div>
+            </div>
+          </div>
+          <div className='flex justify-around'>
+            <Button
+              style={{width: 250, height: 100}}
+              variant='contained' color='success'
+              disabled={TABLE_STATE.WAIT != tableState.estado}
+              onClick={ () => handleOpenTable()}>
             Abrir mesa
-          </Button>
-          <Button
-            variant='contained'
-            color='error'
-            disabled={
-              TABLE_STATE.CLOSE == tableState.estado ||
+            </Button>
+            <Button
+              variant='contained'
+              style={{width: 250, height: 100}}
+              color='error'
+              disabled={
+                TABLE_STATE.CLOSE == tableState.estado ||
               TABLE_STATE.WAIT == tableState.estado}
-            onClick={() => handleClickOpenConfirmation()}>
+              onClick={() => handleClickOpenConfirmation()}>
             Cerrar mesa
-          </Button>
+            </Button>
+          </div>
         </div>
       </div>
       <Dialog

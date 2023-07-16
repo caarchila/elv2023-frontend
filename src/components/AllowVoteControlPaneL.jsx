@@ -85,7 +85,6 @@ export default function AllowVoteControlPanel({tableStatus, mesId, computers}) {
   };
 
   const getHourVote = (voteList) => {
-    console.log({voteList, hour: true});
     if (!voteList || voteList.length == 0) return '';
     const vote = voteList[0];
     const date = new Date(vote.fechaHora);
