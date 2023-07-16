@@ -16,9 +16,9 @@ function IndexPage() {
   if (token.value) {
     switch (token.type) {
       case 'admin':
-        return <Navigate to={PAGES.admin.loginAdmin} />;
+        return <Navigate to={PAGES.admin.dashboard} />;
       case 'votante':
-        return <Navigate to={PAGES.votante.login} />;
+        return <Navigate to={PAGES.votante.votePage} />;
       default:
         return <Navigate to="/error" />;
     }

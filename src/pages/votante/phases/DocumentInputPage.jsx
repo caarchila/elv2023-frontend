@@ -1,34 +1,27 @@
 
-import {Button, TextField} from '@mui/material';
-import {useNavigate} from 'react-router-dom';
-import React, {useState} from 'react';
-import Cabecera from '../../components/Cabecera';
+import {Button, TextField, Alert} from '@mui/material';
+import React from 'react';
 
 /**
  * qwe
  * @return {Object}
  */
-function DocumentInputPage() {
-  const [numDui, setNumDui] = useState(' ');
-  const navigate = useNavigate();
-
+function DocumentInputPage({onClickValidate, numDui, setNumDui, error}) {
   const handleNumberClick = (val) => {
     if (val === -1) {
-      setNumDui(' ');
+      setNumDui('');
     } else {
-      setNumDui(numDui + val);
+      if (numDui.length == 8) {
+        setNumDui(numDui + '-' + val);
+      } else {
+        setNumDui(numDui + val);
+      }
     }
-  };
-
-  const handleVoteClick = () => {
-    // alert('Vote: ' + numDui);
-    navigate('/vote1');
   };
 
   return (
     <div className="w-full h-full mt-8 flex flex-col items-center">
       <div className='flex flex-col items-center bg-white w-[80%] md:w-[50%]'>
-        <Cabecera title=""/>
         <div className='flex flex-col justify-evenly items-center p-6 w-full'>
           <div className='m-3 w-1/2'>
             <TextField label="Ingrese su número de DUI"
@@ -121,8 +114,13 @@ function DocumentInputPage() {
             <Button variant='contained'
               color='success'
               className='w-40 h-12' onClick={() => {
-                handleVoteClick();
-              }}>VALIDAR</Button></div>
+                onClickValidate();
+              }}>VALIDAR</Button>
+          </div>
+
+          { error? <Alert severity='error'>
+            {error}
+          </Alert>: ''}
         </div>
       </div>
     </div>

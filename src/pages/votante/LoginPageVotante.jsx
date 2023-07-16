@@ -102,7 +102,7 @@ function LoginPageVontante() {
         options,
     );
     const data = await response.json();
-    updateToken({value: data.token, type: 'votante'});
+    updateToken({value: data.token, type: 'votante', comId: computer});
     navigate(PAGES.votante.votePage);
   };
 

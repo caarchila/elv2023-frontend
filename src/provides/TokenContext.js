@@ -8,7 +8,7 @@ const TokenContext = createContext();
  */
 function getInitialState() {
   const token = localStorage.getItem('token');
-  return token ? JSON.parse(token) : {value: '', type: ''};
+  return token ? JSON.parse(token) : {value: '', type: '', comId: ''};
 }
 
 /**

@@ -1,6 +1,6 @@
 import './App.css';
-import Vote1 from './pages/Vote1';
-import Vote2 from './pages/Vote2';
+import ConsejoNacional from './pages/votante/phases/ConsejoNacional';
+import Diputados from './pages/votante/phases/Diputados';
 import Vote3 from './pages/Vote3';
 import Final from './pages/Final';
 import React from 'react';
@@ -10,9 +10,9 @@ import {TokenProvider} from './provides/TokenContext';
 import IndexPage from './pages/IndexPage';
 import RequireLogin from './pages/auth/RequireLogin';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
-import DocumentInputPage from './pages/votante/DocumentInputPage';
 import {PAGES} from './config/constants';
 import LoginPageVontante from './pages/votante/LoginPageVotante';
+import VotePage from './pages/votante/VotePage';
 
 /**
  * Home page
@@ -33,11 +33,11 @@ function App() {
           }/>
           <Route path={PAGES.votante.votePage} element={
             <RequireLogin>
-              <DocumentInputPage/>
+              <VotePage/>
             </RequireLogin>
           }/>
-          <Route path="/vote1" element={<Vote1/>}/>
-          <Route path="/vote2" element={<Vote2/>}/>
+          <Route path="/vote1" element={<ConsejoNacional/>}/>
+          <Route path="/vote2" element={<Diputados/>}/>
           <Route path="/vote3" element={<Vote3/>}/>
           <Route path="/final" element={<Final/>}/>
         </Routes>

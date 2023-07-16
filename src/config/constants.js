@@ -9,6 +9,12 @@ const COMPUTER_STATE = {
   INA: 'INA',
 };
 
+const VOTE_ANSWER = {
+  SI: 'S',
+  NO: 'N',
+  ABSTENERCE: 'A',
+};
+
 const PAGES = {
   index: '/',
   admin: {
@@ -26,4 +32,5 @@ export {
   PAGES,
   TABLE_STATE,
   COMPUTER_STATE,
+  VOTE_ANSWER,
 };
