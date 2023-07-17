@@ -62,7 +62,7 @@ export default function ConsejoNacional({handleVote}) {
       Si apoya la planilla de Secretarios para el Consejo Ejecutivo Nacional,
       presione el botón “SI”.  Si no lo apoya presione el botón “No”
       o presione “Abstención” si no desea emitir ninguna posición
-      sobre el candidato
+      sobre los candidatos
       </div>
       <div className='flex flex-auto
       w-full items-center flex-wrap justify-center'>

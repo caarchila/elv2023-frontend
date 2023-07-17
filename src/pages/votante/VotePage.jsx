@@ -168,7 +168,7 @@ function VotePage() {
         return <Final handleClickSalir={enviarVoto}/>;
       default:
         return <Alert className='error' a={requiredPhases}>
-          Contante con el administrador, fase desconocida
+          Contacte con el administrador, fase desconocida
         </Alert>;
     }
   };
